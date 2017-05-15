@@ -1,6 +1,7 @@
 var gutil = require('gulp-util'),//异常处理
     fs = require('fs'),//文件读写
-    path = require('path'); //获取路径
+    path = require('path'),//获取路径
+    buildHtml=require('gulp-tpls').buildHtml;//模板生成HTML
 
 
 /**
@@ -277,8 +278,9 @@ var JsonBuildHtml=(function(){
          * @param {Array} _modules 模块列表
          * @returns {String} 返回处理好的模板文本
          */
-        _replaceMod: function (tplstxt, _modules) {
-            var _moduleList,
+        _replaceMod: function (tplstxt, _modules,options) {
+            var _this=this,
+                _moduleList,
                 _regExp,
                 _module,
                 _tagName;
@@ -305,7 +307,9 @@ var JsonBuildHtml=(function(){
                             value = spaces + value;
                             return value;
                         });
-                        return "\r\n" + _moduleList.join("\r\n") || "";
+                        //return "\r\n" + _moduleList.join("\r\n") || "";
+                        var _includeHtml=buildHtml("\r\n" + _moduleList.join("\r\n") || "",options);
+                        return _this._replaceMod(_includeHtml, _modules,options);
                     });
 
                 } else {//注入的模块不存在
@@ -323,12 +327,12 @@ var JsonBuildHtml=(function(){
          * @param {Object} _json 当前的pageJSON文件的JSON数据
          * @returns {String} 返回处理好的模板文本
          */
-        _injectCommMod: function (tplstxt, _json) {
+        _injectCommMod: function (tplstxt, _json,options) {
             var _this = this,
                 _modules = _json && _json.commModules;
 
 
-            tplstxt = _this._replaceMod(tplstxt, _modules);
+            tplstxt = _this._replaceMod(tplstxt, _modules,options);
 
             return tplstxt || "";
         },
@@ -339,12 +343,12 @@ var JsonBuildHtml=(function(){
          * @param {Object} _fileObj 当前的文件对应的JSON数据
          * @returns {String} 返回处理好的模板文本
          */
-        _injectMod: function (tplstxt, _fileObj) {
+        _injectMod: function (tplstxt, _fileObj,options) {
             var _this = this,
                 _modules = _fileObj && _fileObj.modules;
 
 
-            tplstxt = _this._replaceMod(tplstxt, _modules);
+            tplstxt = _this._replaceMod(tplstxt, _modules,options);
             
             return tplstxt || "";
         },
@@ -368,8 +372,8 @@ var JsonBuildHtml=(function(){
                         _tplstxt = _this._handleViews(_tplstxt, _fileObj, options);//处理视图
                         _tplstxt = _this._handleCommViews(_tplstxt, _json, options);//处理公共视图
                         _tplstxt = _this._injectTitle(_tplstxt, _fileObj);//注入标题
-                        _tplstxt = _this._injectMod(_tplstxt, _fileObj);//注入模块
-                        _tplstxt = _this._injectCommMod(_tplstxt, _json);//注入公共模块
+                        _tplstxt = _this._injectMod(_tplstxt, _fileObj,options);//注入模块
+                        _tplstxt = _this._injectCommMod(_tplstxt, _json,options);//注入公共模块
                         _contents.push(_tplstxt);
                     }
                 }

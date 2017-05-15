@@ -15,7 +15,8 @@
   ],
   "dependencies": {
     "gulp-util": "^3.0.7",
-    "through2": "^2.0.0"
+    "through2": "^2.0.0",
+    "gulp-tpls": "git+https://github.com/penyuying/gulp-tpls.git"
   },
   "peerDependencies": {
     "gulp-util": "^3.0.7",
