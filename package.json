@@ -1,6 +1,6 @@
 {
   "name": "gulp-jsontpls",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "根据JSON生成HTML模板",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,7 @@
   "dependencies": {
     "gulp-util": "^3.0.7",
     "through2": "^2.0.0",
-    "gulp-tpls": "git+https://github.com/penyuying/gulp-tpls.git"
+    "gulp-tpls": "^1.0.0"
   },
   "peerDependencies": {
     "gulp-util": "^3.0.7",
